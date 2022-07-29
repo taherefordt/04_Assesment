@@ -1,8 +1,42 @@
 import random
-import operator
-from operator import add
 import time
 
+
+def decorator(text, decorator, lines, wanted_len, end1, end2, len_text):
+
+
+    # this line here calculates amount of decor needed
+    added_decor = decorator * round(wanted_len - len(text)/2)
+
+    statement = "{} {} {}".format(end1, text, end2)
+    text_length = len(statement)
+
+    if lines == "3":
+        print(end1, added_decor, decorator * text_length, added_decor, end2)
+        print(statement)
+        print(end1, added_decor, decorator * text_length, added_decor, end2)
+
+    if lines == "1":
+        print(end1, added_decor, statement, added_decor, end2)
+
+
+# Choice checking function
+def choice_check(question, valid_answer, error):
+
+    # Loop to keep the question going till answered properly
+    valid = False
+    while not valid:
+
+            response = input(question).lower()
+            
+            for word in valid_answer:
+                if response == word[0] or response == word:
+                    return word
+            
+            print(error)
+            print()
+
+# Number checking function goes here
 def intcheck(question, low=None, high=None, exit_code=None):
 
     while True:
@@ -45,25 +79,10 @@ def intcheck(question, low=None, high=None, exit_code=None):
             print(error)
             continue
 
-diff_multiplier = 1
-score_coefficient = 1
-operator = (add)
-shown_op = "+"
-num1, num2 = random.randint(1, 10 * diff_multiplier), random.randint(1, 10 * diff_multiplier)
+# Valid difficulties
+difficulties = ["drizzle", "rainstorm", "monsoon"]
 
-given_points = 300 * score_coefficient
-
-answer = operator(num1, num2)
-
-start_time = 0
-
-start_time = time.time()
-
-response = intcheck("what is {} {} {}? ".format(num1, shown_op, num2), 1, None, "xxx")
-
-endtime = time.time()
-
-total_time = endtime - start_time
-
-print(start_time)
+difficulty_question = decorator("what difficulty will you choose? \x1b[38;2;170;255;60m drizzle\x1b[37m, \x1b[38;2;255;150;010mrainstorm\x1b[37m, or\x1b[38;2;200;000;000m monsoon\x1b[37m", "=", "3", 100, "|+=-", "-=+|")
+# Asks the user what difficulty theyll play
+difficulty = choice_check(difficulty_question, difficulties, "please choose one of the difficulties listed")
 

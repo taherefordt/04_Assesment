@@ -2,21 +2,19 @@ import random
 import time
 from operator import add, sub, mul, mod, floordiv, pow
 
-def decorator(text, decorator, lines, wanted_len, end1, end2):
+def decorator(text, decorator, lines):
 
-    # this line here fills in negative space with decorator
-    changed_text = "{} {} {}".format(decorator*(wanted_len - int(len(text)))/2, text, decorator*(wanted_len - int(len(text)))/2)
-
-    statement = "{} {} {}".format(end1, changed_text, end2)
+    ends = decorator * 4
+    statement = "{} {} {}".format(ends, text, ends)
     text_length = len(statement)
 
     if lines == "3":
-        print(end1, decorator * text_length, end2 )
-        print(end1, statement, end2)
-        print(end1, decorator * text_length, end2 )
+        print("|+=--", decorator * text_length, "--=+|" )
+        print("|+=--", statement, "--=+|")
+        print("|+=--", decorator * text_length, "--=+|" )
 
     if lines == "1":
-        print(end1, statement, end2)
+        print("|+=--", statement, "--=+|")
 
 # Choice checking function
 def choice_check(question, valid_answer, error):
@@ -91,7 +89,8 @@ DIV_RANGE = 10
 EXP_RANGE = 4
 
 # Asks the user what difficulty theyll play
-difficulty = choice_check(decorator("what difficulty will you choose? \x1b[38;2;170;255;60m drizzle\x1b[37m, \x1b[38;2;255;150;010mrainstorm\x1b[37m, or\x1b[38;2;200;000;000m monsoon\x1b[37m \n", "=", 3, 20, "|+=-", "-=+|"), difficulties, "please choose one of the difficulties listed")
+
+difficulty = choice_check("|+=- What difficulty will you choose? drizzle, rainstorm, or monsoon -=+| ", difficulties, "please choose one of the difficulties listed")
 
 # Difficulties for functions on 'drizzle'
 
@@ -118,14 +117,14 @@ elif difficulty == "monsoon":
     score_coefficient = 2
 
 # Asks user how many questions they want to answer
-questions_total = intcheck("how many questions do you want to answer? ", 1, None, None)
-
+questions_total = intcheck("|+=-- How many questions do you want to answer? --+=| ", 1, None, None)
+questions_played = 0
 total_points = 0
 
 while questions_total > questions_played:
 
     operator = random.choice(operators)
-
+    questions_played += 1
 
     # Changes the difficulty multiplier / what operator is printed depending on what operator is used
     if operator == add:
@@ -143,41 +142,41 @@ while questions_total > questions_played:
         shown_op = "-"
 
         if difficulty == "drizzle":
-            diff_multiplier = 10
+            diff_multiplier = 5
 
         elif difficulty == "rainstorm":
-            diff_multiplier = 25
+            diff_multiplier = 12
         
         else:
-            diff_multiplier = 50
+            diff_multiplier = 25
 
     elif operator == mul:
         shown_op = "*"
 
         if difficulty == "rainstorm":
-            diff_multiplier = 1.7
+            diff_multiplier = 0.8
         else:
-            diff_multiplier = 5
+            diff_multiplier = 2.5
 
     elif operator == floordiv:
         shown_op = "/"
 
         if difficulty == "rainstorm":
-            diff_multiplier = 1.7
+            diff_multiplier = 0.8
         else:
-            diff_multiplier = 5
+            diff_multiplier = 2.5
 
     elif operator == mod:
         shown_op = "%"
         if difficulty == "monsoon":
-            diff_multiplier = 2.5
+            diff_multiplier = 0.2
 
     else:
         shown_op = "^"
         if difficulty == "monsoon":
-            diff_multiplier = 0.4
+            diff_multiplier = 0.2
 
-    num1, num2 = random.randint(1, 10 * diff_multiplier), random.randint(1, 10 * diff_multiplier)
+    num1, num2 = random.randint(1, 20 * diff_multiplier), random.randint(1, 10 * diff_multiplier)
 
     #calculates the points awarded
     given_points = 300 * score_coefficient
@@ -188,7 +187,9 @@ while questions_total > questions_played:
     # Starts timer before the question and ends it right after the user answers
     start_time = time.time()
     #actual question
-    question = decorator("what is {} {} {}? ".format(num1, shown_op, num2), "=", 1, 20, "|+=-", "-=+|")
+    
+    question = "|+=- What is {} {} {}? (type 'xxx' to quit)-=+| ".format(num1, shown_op, num2)
+    print("|+=- Round {} of {}: -=+|".format(questions_played, questions_total))
     response = intcheck(question, None, None, "xxx")
     #timer stops here
     end_time = time.time()
@@ -198,11 +199,14 @@ while questions_total > questions_played:
 
     # outcomes depending on response
     if response == answer:
-        decorator("correct, {} points".format(given_points), "=", 1, 20, "|+=-", "-=+|")
+        print("|+=- Correct, {} points -=+|".format(given_points))
         total_points += given_points
     
+    elif response == "xxx":
+        break
+
     else:
-        decorator("you got it wrong", "=", 1, 20, "|+=-", "-=+|")
+        print("|+=- You got it wrong -=+|")
 
 
-    
+print("|+=- you had {} points when the game finished".format(total_points))
