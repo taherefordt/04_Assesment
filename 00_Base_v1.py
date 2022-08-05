@@ -1,6 +1,10 @@
 import random
 import time
-from operator import add, sub, mul, mod, floordiv, pow
+from operator import add, sub, mul, mod, truediv, pow
+
+def divcheck(num1, num2):
+    final_num = num1 / num2
+    return final_num
 
 def instructions():
     print()
@@ -19,6 +23,7 @@ def instructions():
     print("|+=--                                             --=+|")
     print()
 
+# decorator here
 def decorator(text, decorator, lines):
 
     ends = decorator * 4
@@ -50,46 +55,90 @@ def choice_check(question, valid_answer, error):
             print()
 
 # Number checking function goes here
-def intcheck(question, low=None, high=None, exit_code=None):
+def numcheck(question, flint, low=None, high=None, exit_code=None):
 
-    while True:
+    if flint == "int":
 
-        # sets up error messages
-        if low is not None and high is not None:
-            error = "Please enter an integer between {} and {} (inclusive)".format(low, high)
-        elif low is not None:
-            error = "Please enter an integer that is more than or equal to {}".format(low)
-        elif high is not None:
-            error = "Please enter an integer that is less than or equal to {}".format(high)
-        else:
-            error = "Please enter an integer"
+        while True:
 
-        try:
-            response = input(question)
-            
-            # check to see if response is the exit code and return it
-            if response == exit_code:
-                return response
-            
-            # change the response into an integer
+            # sets up error messages
+            if low is not None and high is not None:
+                error = "Please enter an integer between {} and {} (inclusive)".format(low, high)
+            elif low is not None:
+                error = "Please enter an integer that is more than or equal to {}".format(low)
+            elif high is not None:
+                error = "Please enter an integer that is less than or equal to {}".format(high)
             else:
-                response = int(response)
+                error = "Please enter an integer"
 
-            # Checks response is not too low, not use of 'is not' keywords
-            if low is not None and response < low:
+            try:
+                response = input(question)
+                
+                # check to see if response is the exit code and return it
+                if response == exit_code:
+                    return response
+                
+                # change the response into an integer
+                else:
+                    response = int(response)
+
+                # Checks response is not too low, not use of 'is not' keywords
+                if low is not None and response < low:
+                    print(error)
+                    continue
+
+                # Checks response is not too high
+                if high is not None and response > high:
+                    print(error)
+                    continue
+
+                return response
+
+            # checks input is a integer
+            except ValueError:
                 print(error)
                 continue
 
-            # Checks response is not too high
-            if high is not None and response > high:
+    elif flint == "float":
+
+        while True:
+        
+            # sets up error messages
+            if low is not None and high is not None:
+                error = "Please enter an integer between {} and {} (inclusive)".format(low, high)
+            elif low is not None:
+                error = "Please enter an integer that is more than or equal to {}".format(low)
+            elif high is not None:
+                error = "Please enter an integer that is less than or equal to {}".format(high)
+            else:
+                error = "Please enter an integer"
+
+            try:
+                response = input(question)
+                
+                # check to see if response is the exit code and return it
+                if response == exit_code:
+                    return response
+                
+                # change the response into an float
+                else:
+                    response = float(response)
+
+                # Checks response is not too low, not use of 'is not' keywords
+                if low is not None and response < low:
+                    print(error)
+                    continue
+
+                # Checks response is not too high
+                if high is not None and response > high:
+                    print(error)
+                    continue
+
+                return response
+
+            # checks input is a integer
+            except ValueError:
                 print(error)
-                continue
-
-            return response
-
-        # checks input is a integer
-        except ValueError:
-            print(error)
             continue
 
 yes_no = ["yes", "no"]
@@ -128,7 +177,7 @@ while play_again == "yes":
 
     elif difficulty == "rainstorm":
 
-        operators = (add, sub, mul, floordiv)
+        operators = (add, sub, mul, truediv)
 
         score_coefficient = 1
 
@@ -136,12 +185,12 @@ while play_again == "yes":
 
     elif difficulty == "monsoon":
 
-        operators = (add, sub, mul, floordiv, mod, pow)
+        operators = (add, sub, mul, truediv, mod, pow)
 
         score_coefficient = 2
 
     # Asks user how many questions they want to answer
-    questions_total = intcheck("|+=-- How many questions do you want to answer? --+=| ", 1, None, None)
+    questions_total = numcheck("|+=-- How many questions do you want to answer? --+=| ", "int", 1, None, None)
     questions_played = 0
     total_points = 0
 
@@ -182,7 +231,7 @@ while play_again == "yes":
             else:
                 diff_multiplier = 2.5
 
-        elif operator == floordiv:
+        elif operator == truediv:
             shown_op = "/"
 
             if difficulty == "rainstorm":
@@ -206,7 +255,7 @@ while play_again == "yes":
         given_points = 300 * score_coefficient
 
         # answer for the question
-        answer = operator(num1, num2)
+        
 
         # Starts timer before the question and ends it right after the user answers
         start_time = time.time()
@@ -218,7 +267,9 @@ while play_again == "yes":
         print("|+=- Round {} of {}: -=+|".format(questions_played, questions_total))
 
         # asks user the question
-        response = intcheck(question, None, None, "xxx")
+        answer = operator(num1, num2)
+        
+        response = numcheck(question, "float", None, None, "xxx")
 
         # timer stops here
         end_time = time.time()
